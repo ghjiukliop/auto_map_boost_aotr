@@ -269,7 +269,7 @@ end
 if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
     player.Character.HumanoidRootPart.CFrame = CFrame.new(223.36, 6.25, 51.28)
 end
-task.wait(0.5)
+task.wait(1)
 
 local missionsFolder = pGui:WaitForChild("Interface"):WaitForChild("Missions")
 humanClick(missionsFolder:WaitForChild("Prompt"):WaitForChild("Selection"):WaitForChild("Missions"))
@@ -283,6 +283,10 @@ for i = 1, 30 do
         local map = mapsContainer:FindFirstChild(name)
         if map and map:FindFirstChild("Boost") then
             boostElement = map:FindFirstChild("Boost")
+            humanClick(map)
+            task.wait(0.2)
+            humanClick(map)
+            task.wait(0.2)
             humanClick(map)
             boostFound = true
             break
