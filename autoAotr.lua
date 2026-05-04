@@ -13,11 +13,11 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 -- Conditional logic based on Place ID
 if p == 13379208636 then
     print("Running PART 1 (Slot Selection)")
-    
+
 elseif p == 14916516914 then
     print("Running PART 2 (Boost Timer)")
 else
-    print("Unknown Place ID, script will not run")
+    print("Unknown Place ID, script will not run") 
     return
 end
 
@@ -300,9 +300,15 @@ end
 
 humanClick(missionsFolder.Missions.Main.Info.Main.Buttons:WaitForChild("Creation_Missions"))
 
+-- [BƯỚC 5] Click vào nút để mở bảng Modifiers
 local modInfo = pGui:WaitForChild("Interface"):WaitForChild("Missions"):WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info")
-local options = modInfo:WaitForChild("Modifiers"):WaitForChild("Options")
+local openModifiersBtn = modInfo:WaitForChild("Modifiers"):WaitForChild("Modifiers_Buttons")
+humanClick(openModifiersBtn)
 
+task.wait(0.5)
+
+-- [BƯỚC 6] Vòng lặp chọn Modifiers
+local options = modInfo:WaitForChild("Modifiers"):WaitForChild("Options")
 local modifierNames = {
     "Grid", "Boring", "Chronic Injuries", "Fog", "Glass Cannon", 
     "Injury Prone", "Nightmare", "No Memories", "No Perks", 
@@ -311,7 +317,6 @@ local modifierNames = {
 
 for _, modName in ipairs(modifierNames) do
     local targetMod = nil
-    
     for _, child in ipairs(options:GetChildren()) do
         if child.Name == modName and child:IsA("GuiObject") then
             targetMod = child
@@ -325,9 +330,20 @@ for _, modName in ipairs(modifierNames) do
             options.CanvasPosition = Vector2.new(0, targetY - (options.AbsoluteSize.Y / 3)) 
             task.wait(0.1)
         end
-
         local clickTarget = targetMod:FindFirstChild("Interact") or targetMod
         humanClick(clickTarget)
     end
-end 
+end
+
+-- [BƯỚC 7] Click nút Return để đóng bảng Modifiers
+local returnBtn = modInfo:WaitForChild("Modifiers"):WaitForChild("Modifiers_Buttons"):WaitForChild("Modifiers_Return")
+humanClick(returnBtn)
+
+task.wait(0.5)
+
+-- [BƯỚC 8] Click nút Begin để bắt đầu Mission
+local beginBtn = missionsFolder:WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info_Buttons"):WaitForChild("Begin")
+humanClick(beginBtn)
+
+print("--- Pipeline Hoàn Tất! ---")
 end -- End of Part 2
