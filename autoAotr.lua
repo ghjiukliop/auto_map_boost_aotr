@@ -173,7 +173,7 @@ end
     if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
         player.Character.HumanoidRootPart.CFrame = CFrame.new(223.36, 6.25, 51.28)
     end
-    task.wait(1)
+    task.wait(1.5)
 
     -------------------------------------------------------------------------
     -- 2. CLICK VÀO MISSIONS
@@ -220,6 +220,7 @@ end
             break
         end
     end
+    task.wait(1.5)
 
     -------------------------------------------------------------------------
     -- 4. NHẤN VÀO CREATE (Creation_Missions)
@@ -234,6 +235,7 @@ end
         task.wait(0.05)
         VirtualInputManager:SendMouseButtonEvent(cx, cy, 0, false, game, 1)
     end
+    task.wait(1.5)
 
     print("--- Pipeline hoàn tất! ---")
 
@@ -285,7 +287,7 @@ clickPhysicalButton(openModifiersBtn)
 
 
 
-task.wait(1.00)
+task.wait(1.5)
 
 
 
@@ -334,17 +336,18 @@ for _, modName in ipairs(modifierNames) do
     end
 end
 
-task.wait(1.00)
+task.wait(1.5)
 -- [BƯỚC 7] Click nút Return để đóng bảng Modifiers
 local returnBtn = modInfo:WaitForChild("Modifiers"):WaitForChild("Modifiers_Buttons"):WaitForChild("Modifiers_Return")
 clickPhysicalButton(returnBtn)
 
-task.wait(0.5)
+task.wait(1.5)
 
 -- [BƯỚC 8] Click nút Begin để bắt đầu Mission
 local missionsFolder = pGui:WaitForChild("Interface"):WaitForChild("Missions")
 local beginBtn = missionsFolder:WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info_Buttons"):WaitForChild("Begin")
 clickPhysicalButton(beginBtn)
+task.wait(1.5)
 
 print("--- Pipeline Hoàn Tất! ---")
 end -- End of Part 2
