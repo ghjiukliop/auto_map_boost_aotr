@@ -342,21 +342,46 @@ end
 
 -- Check if boost has expired
 local boostStillActive = checkAndLoadBoostTimer()
+
 if not boostStillActive then
-	-- Click Leave_2 button when it appears
-	local btn = pGui:WaitForChild("Interface", 5):WaitForChild("Rewards", 5):WaitForChild("Main", 5):WaitForChild("Info", 5):WaitForChild("Main", 5):WaitForChild("Buttons", 5):WaitForChild("Leave_2", 5)
-	
-	task.spawn(function()
-		while task.wait(0.1) do
-			if isVisible(btn) then
-				local pos = btn.AbsolutePosition + (btn.AbsoluteSize / 2)
-				-- Cộng thêm 36 vì Roblox tính tọa độ từ TopBar
-				VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y + 36, 0, true, game, 0)
-				VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y + 36, 0, false, game, 0)
-				break 
+	-- Liên tục kiểm tra nút Leave_2 mỗi 1 giây khi boost đã expire
+	local function waitAndClickLeaveButton()
+		print("Boost expired, waiting for Leave_2 button...")
+		
+		while true do
+			local btn = pGui:FindFirstChild("Interface")
+			if btn then
+				btn = btn:FindFirstChild("Rewards")
+				if btn then
+					btn = btn:FindFirstChild("Main")
+					if btn then
+						btn = btn:FindFirstChild("Info")
+						if btn then
+							btn = btn:FindFirstChild("Main")
+							if btn then
+								btn = btn:FindFirstChild("Buttons")
+								if btn then
+									btn = btn:FindFirstChild("Leave_2")
+									if btn and isVisible(btn) then
+										print("Found Leave_2, clicking now...")
+										local pos = btn.AbsolutePosition + (btn.AbsoluteSize / 2)
+										VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y + 36, 0, true, game, 0)
+										task.wait(0.05)
+										VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y + 36, 0, false, game, 0)
+										print("Leave_2 button clicked successfully!")
+										return true
+									end
+								end
+							end
+						end
+					end
+				end
 			end
+			task.wait(1) -- Kiểm tra mỗi 1 giây
 		end
-	end)
+	end
+	
+	waitAndClickLeaveButton()
 end
 
 print("--- Part 3 Completed ---")
