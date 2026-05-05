@@ -167,6 +167,18 @@ local function extractAndSaveBoostTime(boostElement)
     return false
 end
 
+local function clickPhysicalButton(btn)
+    if btn and btn.Visible then
+        local x = btn.AbsolutePosition.X + (btn.AbsoluteSize.X / 2)
+        local y = btn.AbsolutePosition.Y + (btn.AbsoluteSize.Y / 2) + Y_OFFSET
+        VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
+        task.wait(0.05)
+        VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
+        return true
+    end
+    return false
+end
+
     -------------------------------------------------------------------------
     -- 1. DỊCH CHUYỂN ĐẾN TỌA ĐỘ ĐƯỢC LƯU
     -------------------------------------------------------------------------
