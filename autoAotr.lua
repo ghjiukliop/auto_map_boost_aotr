@@ -190,51 +190,33 @@ end
     end
     task.wait(1.5) -- Đợi giao diện Mission hiện ra
 
-    -------------------------------------------------------------------------
-    -- 3. TÌM MAP CÓ BOOST REWARD (ĐÃ CẬP NHẬT)
+   -------------------------------------------------------------------------
+    -- 3. TÌM MAP CÓ BOOST REWARD VÀ LƯU THỜI GIAN
     -------------------------------------------------------------------------
     local missionsFolder = pGui:WaitForChild("Interface"):WaitForChild("Missions")
-    if not missionsFolder then
-        print("ERROR: missionsFolder is nil")
-        return
-    end
-    
-    local mapsContainer = missionsFolder:FindFirstChild("Missions")
-    if mapsContainer then
-        mapsContainer = mapsContainer:FindFirstChild("Main")
-        if mapsContainer then
-            mapsContainer = mapsContainer:FindFirstChild("Maps")
-            if mapsContainer then
-                mapsContainer = mapsContainer:FindFirstChild("Maps")
-            end
-        end
-    end
-    
-    if not mapsContainer then
-        print("ERROR: mapsContainer is nil")
-        return
-    end
+    local mapsContainer = missionsFolder.Missions.Main.Maps.Maps
     
     local mapList = {"Chapel_Missions", "Docks_Missions", "Forest_Missions", "Outskirts_Missions", "Shiganshina_Missions", "Stohess_Missions", "Trost_Missions", "Utgard_Missions"}
 
     for _, name in ipairs(mapList) do
         local map = mapsContainer:FindFirstChild(name)
         if map and map:FindFirstChild("Boost") then
-            -- Gọi hàm lưu thời gian NGAY TẠI ĐÂY trước khi click
+            -- [QUAN TRỌNG] Lưu thời gian Boost trước khi click vào Map
             extractAndSaveBoostTime(map.Boost) 
 
+            -- Cuộn đến Map nếu cần
             if mapsContainer:IsA("ScrollingFrame") then
                 local targetY = map.AbsolutePosition.Y - mapsContainer.AbsolutePosition.Y + mapsContainer.CanvasPosition.Y
                 mapsContainer.CanvasPosition = Vector2.new(0, targetY - (mapsContainer.AbsoluteSize.Y / 3))
                 task.wait(0.2)
             end
             
+            -- Click chọn Map
             local x = map.AbsolutePosition.X + (map.AbsoluteSize.X / 2)
             local y = map.AbsolutePosition.Y + (map.AbsoluteSize.Y / 2) + Y_OFFSET
-            
-            vim:SendMouseButtonEvent(x, y, 0, true, game, 1)
+            VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
             task.wait(0.05)
-            vim:SendMouseButtonEvent(x, y, 0, false, game, 1)
+            VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
             break
         end
     end
@@ -248,25 +230,11 @@ end
     if creationBtn and creationBtn.Visible then
         local cx = creationBtn.AbsolutePosition.X + (creationBtn.AbsoluteSize.X / 2)
         local cy = creationBtn.AbsolutePosition.Y + (creationBtn.AbsoluteSize.Y / 2) + Y_OFFSET
-        
         VirtualInputManager:SendMouseButtonEvent(cx, cy, 0, true, game, 1)
         task.wait(0.05)
         VirtualInputManager:SendMouseButtonEvent(cx, cy, 0, false, game, 1)
     end
     task.wait(1.5)
-
-local function clickPhysicalButton(btn)
-    if btn and btn.Visible then
-        local x = btn.AbsolutePosition.X + (btn.AbsoluteSize.X / 2)
-        local y = btn.AbsolutePosition.Y + (btn.AbsoluteSize.Y / 2) + Y_OFFSET
-        VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
-        task.wait(0.05)
-        VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
-        return true
-    end
-    return false
-end
-
 -- [BƯỚC 5] Mở bảng Modifiers
 
 local modInfo = pGui:WaitForChild("Interface"):WaitForChild("Missions"):WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info")
