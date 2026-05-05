@@ -237,45 +237,17 @@ end
     end
     task.wait(1.5)
 
-    print("--- Pipeline hoàn tất! ---")
-
--- Khai báo đầy đủ để tránh lỗi attempt to index nil
-
-local Players = game:GetService("Players")
-
-local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
-
-local pGui = player:WaitForChild("PlayerGui", 999)
-
-local VirtualInputManager = game:GetService("VirtualInputManager")
-
-
-
--- Hàm click vật lý chuẩn cho GHJIUKLIOP STORE
-
 local function clickPhysicalButton(btn)
-
     if btn and btn.Visible then
-
         local x = btn.AbsolutePosition.X + (btn.AbsoluteSize.X / 2)
-
-        local y = btn.AbsolutePosition.Y + (btn.AbsoluteSize.Y / 2) + 58 -- Y_OFFSET chuẩn
-
+        local y = btn.AbsolutePosition.Y + (btn.AbsoluteSize.Y / 2) + Y_OFFSET
         VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
-
         task.wait(0.05)
-
         VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
-
         return true
-
     end
-
     return false
-
 end
-
-task.wait(1.00)
 
 -- [BƯỚC 5] Mở bảng Modifiers
 
@@ -289,28 +261,7 @@ clickPhysicalButton(openModifiersBtn)
 
 task.wait(1.5)
 
-
-
--- [BƯỚC 6] Lựa chọn Modifiers
-
-local Players = game:GetService("Players")
-local VirtualInputManager = game:GetService("VirtualInputManager")
-local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
-local pGui = player:WaitForChild("PlayerGui", 999)
-
-local function clickPhysicalButton(btn)
-    if btn and btn.Visible then
-        local x = btn.AbsolutePosition.X + (btn.AbsoluteSize.X / 2)
-        local y = btn.AbsolutePosition.Y + (btn.AbsoluteSize.Y / 2) + 58
-        VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
-        task.wait(0.05)
-        VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
-        return true
-    end
-    return false
-end
-
-local modInfo = pGui:WaitForChild("Interface"):WaitForChild("Missions"):WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info")
+-- [BƯỚC 6] CHỌN MODIFIERS
 local options = modInfo:WaitForChild("Modifiers"):WaitForChild("Options")
 local modifierNames = {"Grid", "Boring", "Chronic Injuries", "Fog", "Glass Cannon", "Injury Prone", "Nightmare", "No Memories", "No Perks", "No Skills", "Oddball", "Simple", "Time Trial"}
 
@@ -337,14 +288,14 @@ for _, modName in ipairs(modifierNames) do
 end
 
 task.wait(1.5)
--- [BƯỚC 7] Click nút Return để đóng bảng Modifiers
+
+-- [BƯỚC 7] CLOSE MODIFIERS
 local returnBtn = modInfo:WaitForChild("Modifiers"):WaitForChild("Modifiers_Buttons"):WaitForChild("Modifiers_Return")
 clickPhysicalButton(returnBtn)
 
 task.wait(1.5)
 
--- [BƯỚC 8] Click nút Begin để bắt đầu Mission
-local missionsFolder = pGui:WaitForChild("Interface"):WaitForChild("Missions")
+-- [BƯỚC 8] BEGIN MISSION
 local beginBtn = missionsFolder:WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info_Buttons"):WaitForChild("Begin")
 clickPhysicalButton(beginBtn)
 task.wait(1.5)
