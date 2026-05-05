@@ -134,7 +134,7 @@ end -- End of Part 1
 
 -- phan 2 
 if p == 14916516914 then
-task.wait(60)
+task.wait(30)
 
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
@@ -334,6 +334,7 @@ for _, modName in ipairs(modifierNames) do
     end
 end
 
+task.wait(1.00)
 -- [BƯỚC 7] Click nút Return để đóng bảng Modifiers
 local returnBtn = modInfo:WaitForChild("Modifiers"):WaitForChild("Modifiers_Buttons"):WaitForChild("Modifiers_Return")
 clickPhysicalButton(returnBtn)
