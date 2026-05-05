@@ -289,17 +289,32 @@ clickPhysicalButton(openModifiersBtn)
 
 
 
-task.wait(0.5)
+task.wait(1.00)
 
 
 
 -- [BƯỚC 6] Lựa chọn Modifiers
+
+local Players = game:GetService("Players")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
+local pGui = player:WaitForChild("PlayerGui", 999)
+
+local function clickPhysicalButton(btn)
+    if btn and btn.Visible then
+        local x = btn.AbsolutePosition.X + (btn.AbsoluteSize.X / 2)
+        local y = btn.AbsolutePosition.Y + (btn.AbsoluteSize.Y / 2) + 58
+        VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
+        task.wait(0.05)
+        VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
+        return true
+    end
+    return false
+end
+
+local modInfo = pGui:WaitForChild("Interface"):WaitForChild("Missions"):WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info")
 local options = modInfo:WaitForChild("Modifiers"):WaitForChild("Options")
-local modifierNames = {
-    "Grid", "Boring", "Chronic Injuries", "Fog", "Glass Cannon", 
-    "Injury Prone", "Nightmare", "No Memories", "No Perks", 
-    "No Skills", "Oddball", "Simple", "Time Trial"
-}
+local modifierNames = {"Grid", "Boring", "Chronic Injuries", "Fog", "Glass Cannon", "Injury Prone", "Nightmare", "No Memories", "No Perks", "No Skills", "Oddball", "Simple", "Time Trial"}
 
 for _, modName in ipairs(modifierNames) do
     local targetMod = nil
@@ -311,7 +326,6 @@ for _, modName in ipairs(modifierNames) do
     end
     
     if targetMod then
-        -- Cuộn tới modifier nếu cần
         if options:IsA("ScrollingFrame") then
             local targetY = targetMod.AbsolutePosition.Y - options.AbsolutePosition.Y + options.CanvasPosition.Y
             options.CanvasPosition = Vector2.new(0, targetY - (options.AbsoluteSize.Y / 3)) 
@@ -320,11 +334,9 @@ for _, modName in ipairs(modifierNames) do
         
         local clickTarget = targetMod:FindFirstChild("Interact") or targetMod
         clickPhysicalButton(clickTarget)
-        
-        -- Delay 0.2s mỗi modifier theo yêu cầu của bạn
         task.wait(0.2) 
     end
-end 
+end
 
 -- [BƯỚC 7] Click nút Return để đóng bảng Modifiers
 local returnBtn = modInfo:WaitForChild("Modifiers"):WaitForChild("Modifiers_Buttons"):WaitForChild("Modifiers_Return")
