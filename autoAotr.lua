@@ -134,7 +134,7 @@ end -- End of Part 1
 
 -- phan 2 
 if p == 14916516914 then
-task.wait(45)
+task.wait(60)
 
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
@@ -244,7 +244,7 @@ end
 -- [BƯỚC 5] Click vào nút để mở bảng Modifiers
     local modInfo = pGui:WaitForChild("Interface"):WaitForChild("Missions"):WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info")
     local openModifiersBtn = modInfo:WaitForChild("Modifiers"):WaitForChild("Modifiers_Buttons")
-    humanClick(openModifiersBtn)
+    clickPhysicalButton(openModifiersBtn)
 
     task.wait(0.5)
 
@@ -272,19 +272,19 @@ end
                 task.wait(0.1)
             end
             local clickTarget = targetMod:FindFirstChild("Interact") or targetMod
-            humanClick(clickTarget)
+            clickPhysicalButton(clickTarget)
         end
     end
 
 -- [BƯỚC 7] Click nút Return để đóng bảng Modifiers
     local returnBtn = modInfo:WaitForChild("Modifiers"):WaitForChild("Modifiers_Buttons"):WaitForChild("Modifiers_Return")
-    humanClick(returnBtn)
+    clickPhysicalButton(returnBtn)
 
     task.wait(0.5)
 
 -- [BƯỚC 8] Click nút Begin để bắt đầu Mission
     local beginBtn = missionsFolder:WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info"):WaitForChild("Main"):WaitForChild("Info_Buttons"):WaitForChild("Begin")
-    humanClick(beginBtn)
+    clickPhysicalButton(beginBtn)
 
     print("--- Pipeline Hoàn Tất! ---")
 end -- End of Part 2
