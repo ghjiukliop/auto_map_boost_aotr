@@ -134,7 +134,7 @@ end -- End of Part 1
 
 -- phan 2 
 if p == 14916516914 then
-task.wait(30)
+task.wait(60)
 
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
@@ -293,73 +293,38 @@ task.wait(0.5)
 
 
 
--- [BƯỚC 6] Lựa chọn Modifiers với delay 0.2s
-
+-- [BƯỚC 6] Lựa chọn Modifiers
 local options = modInfo:WaitForChild("Modifiers"):WaitForChild("Options")
-
 local modifierNames = {
-
     "Grid", "Boring", "Chronic Injuries", "Fog", "Glass Cannon", 
-
     "Injury Prone", "Nightmare", "No Memories", "No Perks", 
-
     "No Skills", "Oddball", "Simple", "Time Trial"
-
 }
 
-
-
 for _, modName in ipairs(modifierNames) do
-
     local targetMod = nil
-
     for _, child in ipairs(options:GetChildren()) do
-
         if child.Name == modName and child:IsA("GuiObject") then
-
             targetMod = child
-
             break
-
         end
-
     end
-
     
-
     if targetMod then
-
         -- Cuộn tới modifier nếu cần
-
         if options:IsA("ScrollingFrame") then
-
             local targetY = targetMod.AbsolutePosition.Y - options.AbsolutePosition.Y + options.CanvasPosition.Y
-
             options.CanvasPosition = Vector2.new(0, targetY - (options.AbsoluteSize.Y / 3)) 
-
             task.wait(0.1)
-
         end
-
         
-
         local clickTarget = targetMod:FindFirstChild("Interact") or targetMod
-
         clickPhysicalButton(clickTarget)
-
         
-
         -- Delay 0.2s mỗi modifier theo yêu cầu của bạn
-
         task.wait(0.2) 
-
     end
-
-end
-
-
-
-print("--- Hoàn tất chọn Modifiers (0.2s/item) ---") 
+end 
 
 -- [BƯỚC 7] Click nút Return để đóng bảng Modifiers
 local returnBtn = modInfo:WaitForChild("Modifiers"):WaitForChild("Modifiers_Buttons"):WaitForChild("Modifiers_Return")
