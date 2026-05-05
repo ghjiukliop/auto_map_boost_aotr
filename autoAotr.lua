@@ -304,85 +304,58 @@ print("--- Pipeline Hoàn Tất! ---")
 end -- End of Part 2
 
 -- phan 3 - Chạy chỉ khi không ở trong 2 Place ID đặc biệt
+-- phan 3 - Chạy khi không ở trong 2 Place ID đặc biệt
 if p ~= 13379208636 and p ~= 14916516914 then
-print("Running PART 3 (Boost Timer Check)")
+    local VIM = game:GetService("VirtualInputManager")
+    local pGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    local Y_OFFSET = 58 -- Đồng bộ tọa độ click với Part 2
 
-task.wait(1)
-
-local Players = game:GetService("Players")
-local VirtualInputManager = game:GetService("VirtualInputManager")
-local player = Players.LocalPlayer
-local pGui = player:WaitForChild("PlayerGui")
-
--- Boost Timer Functions
-local function checkAndLoadBoostTimer()
-    local success, content = pcall(function() return readfile("boost_timer.txt") end)
-    if success and content then
-        local endTime = tonumber(content)
-        if endTime and os.time() < endTime then
-            print("Boost still active! Time remaining: " .. (endTime - os.time()) .. " seconds")
-            return true
-        else
-            print("Boost has expired, leaving mission...")
-            return false
+    -- Hàm kiểm tra nút có thực sự hiện hữu trên màn hình hay không
+    local function isVisible(obj)
+        local current = obj
+        while current and current:IsA("GuiObject") do
+            if not current.Visible then return false end
+            current = current.Parent
         end
+        local sg = obj:FindFirstAncestorOfClass("ScreenGui")
+        return sg and sg.Enabled
     end
-    return true -- No timer file yet, proceed normally
+
+    -- Hàm kiểm tra thời gian Boost đã hết chưa từ file lưu trữ[cite: 1]
+    local function checkBoostExpired()
+        local success, content = pcall(function() return readfile("boost_timer.txt") end)
+        if success and content then
+            local endTime = tonumber(content)
+            return endTime and os.time() >= endTime
+        end
+        return false 
+    end
+
+    task.spawn(function()
+        -- Giai đoạn 1: Chờ cho đến khi hết thời gian Boost
+        while not checkBoostExpired() do 
+            task.wait(1) 
+        end
+
+        -- Giai đoạn 2: Quét nút Leave_2 mỗi giây một lần
+        while true do
+            -- Sử dụng pcall để tránh lỗi khi các UI cha chưa được tạo[cite: 1]
+            local success, btn = pcall(function()
+                return pGui.Interface.Rewards.Main.Info.Main.Buttons.Leave_2
+            end)
+
+            if success and btn and isVisible(btn) then
+                local pos = btn.AbsolutePosition + (btn.AbsoluteSize / 2)
+                
+                -- Thực hiện thao tác Click vào tâm nút[cite: 1]
+                VIM:SendMouseButtonEvent(pos.X, pos.Y + Y_OFFSET, 0, true, game, 0)
+                task.wait(0.05)
+                VIM:SendMouseButtonEvent(pos.X, pos.Y + Y_OFFSET, 0, false, game, 0)
+                
+                break -- Thoát vòng lặp sau khi click thành công
+            end
+            
+            task.wait(1) -- Quét đúng 1 lần mỗi giây theo yêu cầu
+        end
+    end)
 end
-
-local function isVisible(obj)
-	local current = obj
-	while current and current:IsA("GuiObject") do
-		if not current.Visible then return false end
-		current = current.Parent
-	end
-	local sg = obj:FindFirstAncestorOfClass("ScreenGui")
-	return sg and sg.Enabled
-end
-
--- Check if boost has expired
-local boostStillActive = checkAndLoadBoostTimer()
-
-if not boostStillActive then
-	-- Liên tục kiểm tra nút Leave_2 mỗi 1 giây khi boost đã expire
-	local function waitAndClickLeaveButton()
-		print("Boost expired, waiting for Leave_2 button...")
-		
-		while true do
-			local btn = pGui:FindFirstChild("Interface")
-			if btn then
-				btn = btn:FindFirstChild("Rewards")
-				if btn then
-					btn = btn:FindFirstChild("Main")
-					if btn then
-						btn = btn:FindFirstChild("Info")
-						if btn then
-							btn = btn:FindFirstChild("Main")
-							if btn then
-								btn = btn:FindFirstChild("Buttons")
-								if btn then
-									btn = btn:FindFirstChild("Leave_2")
-									if btn and isVisible(btn) then
-										print("Found Leave_2, clicking now...")
-										local pos = btn.AbsolutePosition + (btn.AbsoluteSize / 2)
-										VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y + 36, 0, true, game, 0)
-										task.wait(0.05)
-										VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y + 36, 0, false, game, 0)
-										print("Leave_2 button clicked successfully!")
-										return true
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-			task.wait(1) -- Kiểm tra mỗi 1 giây
-		end
-	end
-	
-	waitAndClickLeaveButton()
-end
-
-print("--- Part 3 Completed ---")
-end -- End of Part 3
