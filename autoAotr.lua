@@ -191,20 +191,16 @@ end
     task.wait(1.5) -- Đợi giao diện Mission hiện ra
 
     -------------------------------------------------------------------------
-    -- 3. TÌM MAP CÓ BOOST REWARD
+    -- 3. TÌM MAP CÓ BOOST REWARD (ĐÃ CẬP NHẬT)
     -------------------------------------------------------------------------
-    local vim = game:GetService("VirtualInputManager")
-    local player = game:GetService("Players").LocalPlayer
-    local pGui = player:WaitForChild("PlayerGui")
-    local Y_OFFSET = 58
-
-    local missionsFolder = pGui:WaitForChild("Interface"):WaitForChild("Missions")
-    local mapsContainer = missionsFolder.Missions.Main.Maps.Maps
-    local mapList = {"Chapel_Missions", "Docks_Missions", "Forest_Missions", "Outskirts_Missions", "Shiganshina_Missions", "Stohess_Missions", "Trost_Missions", "Utgard_Missions"}
+    -- ... (đoạn code lấy mapList và mapsContainer)
 
     for _, name in ipairs(mapList) do
         local map = mapsContainer:FindFirstChild(name)
         if map and map:FindFirstChild("Boost") then
+            -- Gọi hàm lưu thời gian NGAY TẠI ĐÂY trước khi click
+            extractAndSaveBoostTime(map.Boost) 
+
             if mapsContainer:IsA("ScrollingFrame") then
                 local targetY = map.AbsolutePosition.Y - mapsContainer.AbsolutePosition.Y + mapsContainer.CanvasPosition.Y
                 mapsContainer.CanvasPosition = Vector2.new(0, targetY - (mapsContainer.AbsoluteSize.Y / 3))
