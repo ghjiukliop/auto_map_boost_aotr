@@ -330,68 +330,33 @@ local function checkAndLoadBoostTimer()
     return true -- No timer file yet, proceed normally
 end
 
-local function isVisible(o)
-    local c = o
-    while c and c:IsA("GuiObject") do
-        if not c.Visible then return false end
-        c = c.Parent
-    end
-    return o.AbsoluteSize.X > 0
-end
-
-local function clickLeaveButton()
-    print("Waiting for Leave_2 button...")
-    local maxWait = 30
-    local elapsed = 0
-    
-    while elapsed < maxWait do
-        local b = pGui:FindFirstChild("Interface")
-        if b then
-            b = b:FindFirstChild("Rewards")
-            if b then
-                b = b:FindFirstChild("Main")
-                if b then
-                    b = b:FindFirstChild("Info")
-                    if b then
-                        b = b:FindFirstChild("Main")
-                        if b then
-                            b = b:FindFirstChild("Buttons")
-                            if b then
-                                b = b:FindFirstChild("Leave_2")
-                                if b and isVisible(b) then
-                                    print("Found Leave_2, spam clicking...")
-                                    local clickCount = math.random(2, 7)
-                                    print("Clicking " .. clickCount .. " times")
-                                    
-                                    for i = 1, clickCount do
-                                        local x = b.AbsolutePosition.X + (b.AbsoluteSize.X / 2)
-                                        local y = b.AbsolutePosition.Y + (b.AbsoluteSize.Y / 2) + 58
-                                        VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
-                                        task.wait(0.05)
-                                        VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
-                                        task.wait(0.1)
-                                        print("Click " .. i .. " at: " .. x .. ", " .. y)
-                                    end
-                                    print("Leave sequence completed")
-                                    return
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-        task.wait(0.5)
-        elapsed = elapsed + 0.5
-    end
-    
-    print("Timeout: Leave_2 button did not appear within " .. maxWait .. " seconds")
+local function isVisible(obj)
+	local current = obj
+	while current and current:IsA("GuiObject") do
+		if not current.Visible then return false end
+		current = current.Parent
+	end
+	local sg = obj:FindFirstAncestorOfClass("ScreenGui")
+	return sg and sg.Enabled
 end
 
 -- Check if boost has expired
 local boostStillActive = checkAndLoadBoostTimer()
 if not boostStillActive then
-    clickLeaveButton()
+	-- Click Leave_2 button when it appears
+	local btn = pGui:WaitForChild("Interface", 5):WaitForChild("Rewards", 5):WaitForChild("Main", 5):WaitForChild("Info", 5):WaitForChild("Main", 5):WaitForChild("Buttons", 5):WaitForChild("Leave_2", 5)
+	
+	task.spawn(function()
+		while task.wait(0.1) do
+			if isVisible(btn) then
+				local pos = btn.AbsolutePosition + (btn.AbsoluteSize / 2)
+				-- Cộng thêm 36 vì Roblox tính tọa độ từ TopBar
+				VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y + 36, 0, true, game, 0)
+				VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y + 36, 0, false, game, 0)
+				break 
+			end
+		end
+	end)
 end
 
 print("--- Part 3 Completed ---")
