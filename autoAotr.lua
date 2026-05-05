@@ -276,7 +276,7 @@ local function clickPhysicalButton(btn)
 
 end
 
-
+task.wait(1.00)
 
 -- [BƯỚC 5] Mở bảng Modifiers
 
