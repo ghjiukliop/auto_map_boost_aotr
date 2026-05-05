@@ -216,7 +216,6 @@ end
         end
     end
 
-    if not boostFound then return end -- Dừng nếu không có boost
     task.wait(0.5)
 
     -- Extract and save boost timer if found
