@@ -193,35 +193,32 @@ end
     -------------------------------------------------------------------------
     -- 3. TÌM MAP CÓ BOOST REWARD
     -------------------------------------------------------------------------
-    local missionsFolder = pGui.Interface.Missions
+    local vim = game:GetService("VirtualInputManager")
+    local player = game:GetService("Players").LocalPlayer
+    local pGui = player:WaitForChild("PlayerGui")
+    local Y_OFFSET = 58
+
+    local missionsFolder = pGui:WaitForChild("Interface"):WaitForChild("Missions")
     local mapsContainer = missionsFolder.Missions.Main.Maps.Maps
     local mapList = {"Chapel_Missions", "Docks_Missions", "Forest_Missions", "Outskirts_Missions", "Shiganshina_Missions", "Stohess_Missions", "Trost_Missions", "Utgard_Missions"}
-    local boostFound = false
-    local boostElement = nil
-    
+
     for _, name in ipairs(mapList) do
         local map = mapsContainer:FindFirstChild(name)
         if map and map:FindFirstChild("Boost") then
-            boostElement = map:FindFirstChild("Boost")
-            local mx = map.AbsolutePosition.X + (map.AbsoluteSize.X / 2)
-            local my = map.AbsolutePosition.Y + (map.AbsoluteSize.Y / 2) + Y_OFFSET
+            if mapsContainer:IsA("ScrollingFrame") then
+                local targetY = map.AbsolutePosition.Y - mapsContainer.AbsolutePosition.Y + mapsContainer.CanvasPosition.Y
+                mapsContainer.CanvasPosition = Vector2.new(0, targetY - (mapsContainer.AbsoluteSize.Y / 3))
+                task.wait(0.2)
+            end
             
-            -- Click chọn map có boost
-            VirtualInputManager:SendMouseButtonEvent(mx, my, 0, true, game, 1)
+            local x = map.AbsolutePosition.X + (map.AbsoluteSize.X / 2)
+            local y = map.AbsolutePosition.Y + (map.AbsoluteSize.Y / 2) + Y_OFFSET
+            
+            vim:SendMouseButtonEvent(x, y, 0, true, game, 1)
             task.wait(0.05)
-            VirtualInputManager:SendMouseButtonEvent(mx, my, 0, false, game, 1)
-            
-            boostFound = true
+            vim:SendMouseButtonEvent(x, y, 0, false, game, 1)
             break
         end
-    end
-
-    task.wait(0.5)
-
-    -- Extract and save boost timer if found
-    if boostFound and boostElement then
-        task.wait(1)
-        extractAndSaveBoostTime(boostElement)
     end
 
     -------------------------------------------------------------------------
