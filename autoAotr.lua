@@ -193,7 +193,29 @@ end
     -------------------------------------------------------------------------
     -- 3. TÌM MAP CÓ BOOST REWARD (ĐÃ CẬP NHẬT)
     -------------------------------------------------------------------------
-    -- ... (đoạn code lấy mapList và mapsContainer)
+    local missionsFolder = pGui:WaitForChild("Interface"):WaitForChild("Missions")
+    if not missionsFolder then
+        print("ERROR: missionsFolder is nil")
+        return
+    end
+    
+    local mapsContainer = missionsFolder:FindFirstChild("Missions")
+    if mapsContainer then
+        mapsContainer = mapsContainer:FindFirstChild("Main")
+        if mapsContainer then
+            mapsContainer = mapsContainer:FindFirstChild("Maps")
+            if mapsContainer then
+                mapsContainer = mapsContainer:FindFirstChild("Maps")
+            end
+        end
+    end
+    
+    if not mapsContainer then
+        print("ERROR: mapsContainer is nil")
+        return
+    end
+    
+    local mapList = {"Chapel_Missions", "Docks_Missions", "Forest_Missions", "Outskirts_Missions", "Shiganshina_Missions", "Stohess_Missions", "Trost_Missions", "Utgard_Missions"}
 
     for _, name in ipairs(mapList) do
         local map = mapsContainer:FindFirstChild(name)
